@@ -8,13 +8,20 @@
 import Foundation
 
 class ItemModel: ObservableObject {
-    @Published var items: [ContentItem] = [
-        ContentItem(id: Date(), content: "sample", isDone: true)
-    ]
+    @Published var items: [ContentItem] = []
+    
+    func load() {
+        let model = TodoModel()
+        model.getToDoItems { items in
+            print("items:", items)
+            self.items = items
+        }
+    }
 }
 
 struct ContentItem: Identifiable {
-    var id: Date
+    var id: String
     var content: String
     var isDone: Bool
+    var createAt: Date
 }

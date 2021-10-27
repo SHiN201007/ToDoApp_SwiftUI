@@ -19,6 +19,7 @@ struct SelectButton: View {
                 .frame(width: 50, height: 50)
                 .foregroundColor(isSet ? Color.yellow : Color.gray)
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import KRProgressHUD
 
 struct ToDoListView: View {
     @EnvironmentObject var model: ItemModel
@@ -13,7 +14,7 @@ struct ToDoListView: View {
     @State private var showNotDoneOnly = false
     
     var items: [ContentItem] {
-        let items = model.items.sorted { $0.id > $1.id }
+        let items = model.items.sorted { $0.createAt > $1.createAt }
         return items.filter { item in
             (!showNotDoneOnly || !item.isDone)
         }
@@ -30,10 +31,12 @@ struct ToDoListView: View {
                     
                     Button("追加") {
                         if !content.isEmpty {
-                            model.items.append(
-                                ContentItem(
-                                    id: Date(), content: content, isDone: false)
-                            )
+                            let todoModel = TodoModel()
+                            KRProgressHUD.show()
+                            todoModel.insertTodo(content: content) {
+                                // succsess
+                                KRProgressHUD.dismiss()
+                            }
                             content = ""
                         }
                     }
@@ -51,6 +54,9 @@ struct ToDoListView: View {
                 }
             }
             .navigationTitle("TODO")
+            .onAppear(perform: {
+                model.load()
+            })
         }
     }
 }
